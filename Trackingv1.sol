@@ -1,4 +1,3 @@
-
 /* Cette solution simple de traçabilité repose sur un contrat principal (Traceability)
 et un contrat supplémentaire par objet à tracer (Tracking).
 Le contrat principal se comporte comme une liste blanche associant les identifiants
@@ -10,24 +9,26 @@ de Traceability
 contract Trackingv1 {
 
 
-    address public Owner;
-    bytes public identifier;
+    /*address public Owner;
+    bytes32 public identifier;*/
+    address Owner = 0xdedb49385ad5b94a16f236a6890cf9e0b1e30392 ;
+    bytes32 identifier = 'azerty';
     
 /* Ce contrat de traçabilité expose publiquement l'identifiant surveillé ainsi 
 que le propriétaire actuel "Owner". D'autres informations peuvent être ajoutées
 Notez que l'idenfier sera un bytes32 si produit par sha3-256 comme suggéré dans 
-le contrat Traceability*/
+le contrat Traceability; nous utiliserons sha3-256(azerty)*/
 
     event Trackchange(address Owner);
 
 /* Cet event fait la publicité du changement de propriétaire. On peut définir 
 autant d'event qu'il y a d'information à tracer */
 
-    function TrackId() {
-        Owner = msg.sender;
-        identifier = msg.data;
+/*    function TrackId() {
+        Owner = 0xdedb49385ad5b94a16f236a6890cf9e0b1e30392 ;
+        identifier = 'azerty';
     }
-
+*/
 /* La fonction TrackId est le constructeur du contrat, elle s'exécute à la 
 création du contrat et définie par défaut Owner comme étant l'adresse déployant
 le contrat, elle définit également l'identifier comme les données (msg.data en 
