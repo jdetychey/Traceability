@@ -1,65 +1,60 @@
-/* Cette solution simple de traçabilité repose sur un contrat principal (Traceability)
-et un contrat ad hoc par objet à tracer (Tracking).
-Le contrat principal se comporte comme une liste blanche associant les identifiants
-des objets et les contrats de traçabilité.
-Une version plus avancée intègrera le déploiement du contrat Tracking à l'intérieur
-de Traceability
-*/
-
-
 contract Traceabilityv1 {
 
     
-    mapping ( address => bytes32) public TrackList;
+    mapping ( bytes32 => address) public TrackList;
+    
 
-/* Ce mapping associe une adresse à un identifiant (bytes32)  
+/* Ce mapping associe un identifiant (bytes32) à une adresse. 
 Il est commode pour cet identifiant de le générer en hachant l'ensemble des 
 informations importantes relatives via une fonction comme sha3-256. 
 Par exemple pour l'objet à tracer:
 "numéro de série: 0001; date de fabrication: 09082016;Lieu de fabrication: 75017PARIS"
 sha3(00010908201675017PARIS)=
 15905d14d04be568d5e263a664721065a484ffe9c94b474947d601468b2ea744
-L'adresse à laquelle sera associée ce haché sera l'adresse de son contrat de traçabilité
+L'adresse associée à ce haché sera l'adresse de son contrat de traçabilité
 */
 
-    address public Admin;
+/*    address public Admin;*/
+    
+    
+    address Admin = 0xdedb49385ad5b94a16f236a6890cf9e0b1e30392 ;
     
         modifier onlyAdmin() { 
         if (msg.sender != Admin) throw;
         _
     }
 
-/* Ces lignes définissent l'administrateur du contrat, c'est-à-dire la
-personne en charge du mapping TrackList. Le modifier permet de restreindre
-l'accès à certaines fonctions.
+/* Ces lignes définissent l'administrateur du contrat Tracklist, c'est-à-dire la
+personne en charge du mapping TrackList
 */
 
 
-    event Trackchange(address TrackAddress, bytes32 identifier);
+    event Trackchange(bytes32 identifier, address TrackAddress);
 
 /*  cet event fait la publicité de l'attribution d'un identifiant à une adresse
 de contrat de traçabilité
 */
 
-    function TrackAdmin() {
-        Admin = msg.sender;
-    }
+    /*function TrackAdmin() {
+        Admin = 0xdedb49385ad5b94a16f236a6890cf9e0b1e30392;
+    }*/
     
 /* La fonction TrackList est le constructeur du contrat, elle s'exécute à la 
 création du contrat et définie par défaut Admin comme étant l'adresse déployant
 le contrat*/
     
     
-    function Track(address TrackAddress, bytes32 identifier) onlyAdmin() {
-        TrackList[TrackAddress] = identifier;
-       Trackchange(TrackAddress, identifier);
+    function Track( bytes32 identifier, address TrackAddress) onlyAdmin() {
+        TrackList[identifier] = TrackAddress;
+       Trackchange(identifier, TrackAddress);
     }
     
 /* la fonction Track ne peut être appelée que par l'Admin, elle modifie le mapping
 associant les identifiants à leur contrat de traçabilité et en fait la publicité.
-Si le contrat associé à un identifiant devient caduque, par exemple en cas de
+Si le contrat associé à un identifiant devient caduque, par exemple du fait d'une 
 rupture, il est possible pour l'Admin d'associer à cette adresse caduque une 
-alerte au format bytes32 et d'attribuer l'identifiant concerné à une nouvelle adresse */
+alerte au format bytes32 et d'attribuer une nouvelle adresse à l'identifiant
+concerné */
 
 
 
@@ -76,10 +71,4 @@ function kill() onlyAdmin() {
 tandis que la fonction kill permet de retirer le code de la blockchain quand
 le contrat n'est plus utilisé*/
     }
-
-    
-
-
-*** Fin du contrat Traceability***
-
 
