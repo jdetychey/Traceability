@@ -24,12 +24,12 @@ le contrat Traceability; nous utiliserons sha3-256(azerty)*/
 /* Cet event fait la publicité du changement de propriétaire. On peut définir 
 autant d'event qu'il y a d'information à tracer */
 
-/*    function TrackId() {
+/*    function Trackingv1 () {
         Owner = 0xdedb49385ad5b94a16f236a6890cf9e0b1e30392 ;
         identifier = 'azerty';
     }
 */
-/* La fonction TrackId est le constructeur du contrat, elle s'exécute à la 
+/* La fonction Trackingv1  est le constructeur du contrat, elle s'exécute à la 
 création du contrat et définie par défaut Owner comme étant l'adresse déployant
 le contrat, elle définit également l'identifier comme les données (msg.data en 
 bytes) ajoutées à la transaction de déploiement. Remarquez que le contrat peut
